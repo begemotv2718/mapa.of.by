@@ -1,0 +1,13 @@
+The street navigation is trivial by itself, it is simple lookup in the geocode database.
+This is implemented in public_html/parse.pl
+
+The relatively nontrivial thing is conversion of OSM xml file into the database of addresses. 
+Here I can at least boast relatively fast conversion to sqlite (belarus.osm is converted in 11min), this is done
+using little memory (about 20M, mostly the size of perl interpreter).
+
+converters:
+convertdb/osm2sqlite.pl (converts xml into generic sqlite database containing all the info from the initial table).
+convertdb/osmsql2geocodesql.pl (make database of coordinates linked to addresses). This will be rewritten. However, it is also fast
+(for Minsk, takes few seconds)
+
+

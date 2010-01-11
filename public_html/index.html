@@ -1,0 +1,470 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="KeyWords" content="Минск, Карта, openstreetmap"/>
+  <title>Минск на OpenStreetMap</title>
+    <style type="text/css">
+
+a, a:visited, a:active, a:link, a:hover {
+  color: #00f;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.olControlPanel {
+      top: 0px;
+      left: 100px;
+      position: absolute;
+      float: right;
+}
+
+.olControlPanel div {
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            margin-right: 2px;
+            background-color: red;
+            float: left;
+}
+                  
+.olControlPanel .olControlMouseDefaultsItemActive {
+            width: 30px;
+            height: 30px;
+            background-color: orange;
+            background-image: url("img/panning-hand-on.png");
+}
+                  
+.olControlPanel .olControlMouseDefaultsItemInactive {
+            width: 30px;
+            height: 30px;
+            background-color: blue;
+            background-image: url("img/panning-hand-off.png");
+}
+                  
+.olControlPanel .olControlMeasureItemActive {
+            width: 30px;
+            height: 30px;
+            background-color: orange;
+            background-image: url("img/measuring-stick-on.png");
+}
+                  
+.olControlPanel .olControlMeasureItemInactive {
+            width: 30px;
+            height: 30px;
+            background-color: blue;
+            background-image: url("img/measuring-stick-off.png");
+}
+
+#logo {
+  width: 150px;
+  min-width: 150px;
+  padding: 10px;
+  margin: 10px;
+  height: 150px;
+  background: #fff;
+  border: 1px solid #ccd;
+}
+#logo h1 {
+    font-size: 14px;
+    text-align: center;
+    margin: 0px;
+}
+#logo h2 {
+    font-size: 10px;
+    margin: 0px;
+    text-align: center;
+}
+#intro {
+        margin-top: 5px;
+        margin-bottom: 0px;
+        margin-left: 5px;
+        left: 3px;
+        width: 165px;
+        min-width: 165px;
+        position: ablsolute;
+        padding-top: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+        border: 1px solid #ccf;
+        font-size: 12px;
+}
+#links {
+   font-size: 10px;
+   left: 3px;
+   margin-left: 5px;
+   margin-top: 5px;
+   margin-bottom: 0px;
+   padding-left: 5px;
+   padding-right: 5px;
+   padding-top: 10px;
+   min-width: 165px;
+   width: 165px;
+   border: 1px solid #ccf;
+}
+#links h2{
+  font-size: 12px;
+  margin: 0px;
+  text-align: center;
+}
+
+#links ul{
+   margin: 15px;
+   padding-left: 0px;
+}
+#inp {
+          left: 3px;
+          width: 165px;
+          min-width: 165px;
+          position: absolute;
+          padding-top: 5px;
+          padding-left: 5px;
+          padding-right: 5px;
+          margin-top: 5px;
+          margin-left: 5px;
+          border: 1px solid #ccf;
+          font-size: 10px;
+     }
+#inp table {
+         font-size: 12px;
+      }
+#inp input {
+         font-size: 12px;
+}
+#distance {
+        font-size: 20px;
+        font-color: red;
+        right : 20px;
+        bottom: 10px;
+        position: absolute;
+        z-index: 1000;
+        display: none;
+          }
+#content {
+             padding: 0px;
+             margin: 0px;
+             position: absolute; 
+             left: 192px;
+             right: 10px;
+             top: 35px;
+             bottom: 10px;
+             line-height: 1.2em;
+             text-align: left;
+         }
+#left{
+        top: 2px;
+        left: 2px;
+        min-width: 150px;
+        max-width: 192px;
+        position: absolute;
+     }
+body {
+        font-family: Arial, sans-serif;
+        color: #000;
+        background-color: #fff;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+     }
+    </style>
+
+    <!--[if !IE]>-->
+<style type="text/css">
+#map {
+             padding: 0px;
+             margin: 0px;
+             position: absolute; 
+             left: 192px;
+             right: 10px;
+             top: 15px;
+             bottom: 10px;
+             line-height: 1.2em;
+             text-align: left;
+     }
+</style> 
+     <!-- <![endif]-->
+    <!--[if IE]>
+<style type="text/css">
+#map {
+             padding: 0px;
+             margin: 0px;
+             position: absolute; 
+             left: 192px;
+             top: 15px;
+             width: expression(
+                 (d = document.compatMode == "CSS1Compat" ?
+                     document.documentElement : document.body) &&
+                 (eval(d.clientWidth -202))
+             );
+             height: expression(
+                 (d = document.compatMode == "CSS1Compat" ?
+                     document.documentElement : document.body) &&
+                 (eval(d.clientHeight -35))
+             );
+             line-height: 1.2em;
+             text-align: left;
+     }
+</style> 
+      <![endif]-->
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+    <script type="text/javascript">
+        <!--
+        var map;
+        var MeasureLinearCtrl;
+        var measurediv;
+
+        function parsecookie(){
+            var cookie=document.cookie;
+            var cooklist=cookie.split(';');
+            var pair;
+            var res=new Object;
+            for(var i=0; i<cooklist.length; i++){
+                pair=cooklist[i].split('=');
+                res[pair[0]]=pair[1];
+            } 
+            return res;
+        }
+        function init(){
+            var loclist;
+            if(document.cookie)
+            { 
+              loclist=parsecookie()._location.split("|");
+            }
+            map = new OpenLayers.Map('map',
+                    { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                      numZoomLevels: 19,
+                      maxResolution: 156543.0399,
+                      units: 'm',
+                      projection: new OpenLayers.Projection("EPSG:900913"),
+                      displayProjection: new OpenLayers.Projection("EPSG:4326")
+                    });
+ 
+            var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+ 
+            var layerTah = new OpenLayers.Layer.OSM.Osmarender("Tiles@Home");
+ 
+            map.addLayers([layerMapnik,layerTah]);
+ 
+ 
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+ 
+
+           // Measurement controls
+
+
+           var sketchSymbolizers = {
+		   "Point": {
+                              pointRadius: 4,
+                              graphicName: "square",
+                              fillColor: "red",
+                              fillOpacity: 1,
+                              strokeWidth: 1,
+                              strokeColor: "red"
+	                    },
+		   "Line" : {
+			      strokeWidth: 2,
+		              strokeColor: "red"
+			    }	      
+           };
+           var mystyle=new OpenLayers.Style();
+	   mystyle.addRules([
+			      new OpenLayers.Rule({symbolizer: sketchSymbolizers})
+	         	    ]);
+	   var styleMap=new OpenLayers.StyleMap({"default": mystyle});
+           var MLinearCtrlOptions =
+           {
+               title: 'линейка',
+               displayUnits: 'm',
+               eventListeners:
+               {
+                   'measure': handleMeasure,
+                   'measurepartial': handleMeasure,
+                   'deactivate': hideDistance
+               },
+               handlerOptions:
+               {
+                   persist: true,
+                   layerOptions: {styleMap: styleMap}
+               }
+           };
+           
+           MeasureLinearCtrl = new OpenLayers.Control.Measure ( OpenLayers.Handler.Path, MLinearCtrlOptions );
+           MeasureLinearCtrl.geodesic=true;
+           
+           var mousedef= new OpenLayers.Control.MouseDefaults({title: ""});
+           var measurepanel=new OpenLayers.Control.Panel({ defaultControl: mousedef});
+           measurepanel.addControls([mousedef, MeasureLinearCtrl]);
+           
+           map.addControl ( measurepanel );
+           //map.addControl ( MeasureLinearCtrl );
+           
+           map.addControl (new OpenLayers.Control.KeyboardDefaults);
+
+           //Position the map;
+
+           var lonLat;
+           var zoomlevel;
+           if(loclist && (loclist[0]>20)&&(loclist[0]<30)){
+                lonLat= new OpenLayers.LonLat(loclist[0],loclist[1]).transform(map.displayProjection, map.projection);
+                zoomlevel=loclist[2];
+           }else{
+                lonLat = new OpenLayers.LonLat(27.541, 53.894).transform(map.displayProjection,  map.projection);
+                zoomlevel=12;
+           }
+           map.setCenter (lonLat, zoomlevel);
+           map.events.register("zoomend",map,updateLocation);
+           map.events.register("moveend",map,updateLocation);
+
+        }
+
+        function handleMeasure(event)
+        {
+            if(event.order==1) // LINEAR
+            {
+                var mydiv=document.getElementById("distance");
+                mydiv.style.display="inline";
+                mydiv.innerHTML=event.measure.toFixed(3) + " " + event.units;
+                //displayMeasr (event.measure.toFixed(3) + " " + event.units, "");
+            }
+            else // POLYGON
+            {
+                var area = event.measure.toFixed(3) + " " + event.units;
+                var a = map.getControlsByClass('OpenLayers.Control.Measure');
+                var ctrl = a[0];
+                var length = (ctrl.getBestLength(event.geometry)[0]).toFixed(3) + " " + ctrl.getBestLength(event.geometry)[1];
+                //displayMeasr (length, area);
+            }
+        }
+        
+        function hideDistance(event) {
+            var mydiv=document.getElementById("distance");
+            mydiv.style.display="none";
+            mydiv.innerHTML="";
+        }
+
+        function pressedEnter(ev)
+        {
+          var keycode;
+          if(window.event){
+              keycode=window.event.keyCode;
+          }else if(ev){
+              keycode=ev.which;
+          }else{
+              return true;
+          }
+          if((keycode == 13) ||(keycode == 10)){
+              putAddress();
+              if(window.event.keyCode == 13) 
+                   window.event.keyCode=0;
+          }else{
+             return true;
+          }
+        }
+
+        function putAddress(){
+           var myurl='http://mapa.of.by/parse.pl?'+'street='+document.myinputs.street.value+'&house='+document.myinputs.house.value;
+           OpenLayers.loadURL(myurl,'', this,handleResponse);
+        }
+
+        function handleResponse(response){
+           if(response.responseText){
+              if(response.responseText.indexOf('Not found')!=-1){ return; }
+              var latlon=response.responseText.replace(/\s*/,'').split(',');
+              var lat=parseFloat(latlon[0]).toFixed(6);
+              var lon=parseFloat(latlon[1]).toFixed(6);
+              if((lat>51.0)&&(lon>24.0)){
+                  var lonlatobj=new OpenLayers.LonLat(lon,lat).transform(map.displayProjection,  map.projection);
+                  map.setCenter(lonlatobj, 17);
+              }
+           } 
+        }
+        
+        function handleFailure(){
+         alert("request failed!");
+        }   
+   
+        function updateLocation(){
+            var lonlat=map.getCenter().clone();
+            lonlat.transform(map.projection, map.displayProjection);
+            var zoom=map.getZoom();
+            var expiry=new Date();
+            expiry.setYear(expiry.getFullYear()+10);
+            document.cookie="_location="+lonlat.lon+"|"+lonlat.lat+"|"+zoom+"; expires="+expiry.toGMTString();
+        }
+        function doGoogle(){
+            var lonlat=map.getCenter();
+            lonlat.transform(map.projection, map.displayProjection);
+            window.location="http://maps.google.com/?ll="+lonlat.lat+","+lonlat.lon+'&z='+map.getZoom();
+        }
+
+        function doOSM(){
+            var lonlat=map.getCenter();
+            lonlat.transform(map.projection, map.displayProjection);
+            window.location="http://www.openstreetmap.org/?mlat="+lonlat.lat+"&mlon="+lonlat.lon+'&zoom='+map.getZoom();
+        }
+        // -->
+    </script>
+  </head>
+  <body onload="init()">
+    <div id="map">
+     <div id="distance"></div>
+    </div>
+
+    <div id="left">
+    <div id="logo">
+   <center>
+   <h1>OpenStreetMap</h1>
+   <img border=0 width=120 src="osm-logo.png"/>
+   <br/><h2>Карта Минска</h2>
+   </center>
+    </div>
+    <div id="intro">
+    <p>
+    <a href="http://www.openstreetmap.org/">OpenStreetMap</a> &mdash; карта мира, свободно распространяемая и доступная для редактирования.
+    </p>
+    <p>
+На этом сайте выложен небольшой интерфейс к карте OpenStreetMap, позволяющий искать дома в Минске по адресу.
+    </p>
+    <p>
+ Проект некоммерческий, 
+автор занимается им  в свободное время и на собственные деньги, just for lulz.
+    </p>
+<p>
+<a href="about.html">О проекте.</a>
+</p>
+    </div>
+    <div id="links">
+     <h2>На других картах</h2>
+     <ul>
+      <li><a href="javascript:doGoogle()" jsaction="doGoogle()">Google</a></li>
+      <li><a href="javascript:doOSM()" jsaction="doOSM()">OSM (основной сайт)</a></li>
+     </ul>
+    </div>
+    <div id="inp">
+    <form name="myinputs" onsubmit="putAddress(); return false;">
+    <table>
+     <tr> 
+      <td align="left">Улица:</td>
+      <td align="left"> <input type="text" name="street" value="" size=14 onkeypress="return pressedEnter(event)"/></td>
+     </tr>
+     <tr>
+      <td align="left">Дом:</td> 
+      <td align="left"> <input type="text" name="house" value="" size=3 onkeypress="return pressedEnter(event)"/></td>
+     </tr>
+     <tr>
+      <td align="left" colspan=2>
+        <input type="button" value="Поиск" onclick="putAddress()"/>
+      </td>
+     </tr>
+   </table>
+    </form>
+    </div>
+    </div>
+    
+  </body>
+</html>
